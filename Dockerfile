@@ -45,7 +45,7 @@ COPY --from=builder /app/dist ./dist
 # Copy assets if they exist
 RUN mkdir -p dist/assets && \
     if [ -d "/app/src/assets" ]; then \
-        cp -r /app/src/assets/* ./dist/assets/ || true; \
+    cp -r /app/src/assets/* ./dist/assets/ || true; \
     fi
 
 # Copy certificates if required

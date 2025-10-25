@@ -4,6 +4,7 @@ import { BullModule } from '@nestjs/bull';
 import { CamerasModule } from './cameras/cameras.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CeleparModule } from './celepar/celepar.module';
+import { KafkaModule } from './kafka/kafka.module'; // <-- novo
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CeleparModule } from './celepar/celepar.module';
     PrismaModule,
     CamerasModule,
     CeleparModule,
+    KafkaModule,
   ],
 })
 export class AppModule { }

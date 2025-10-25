@@ -26,6 +26,59 @@ services:
     networks:
       - eyesec-net
 
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: eyesec-redisinsight
+    restart: always
+    ports:
+      - "8001:8001"
+    networks:
+      - eyesec-net
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: eyesec-zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    networks:
+      - eyesec-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: eyesec-kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    networks:
+      - eyesec-net
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: eyesec-kafdrop
+    restart: always
+    depends_on:
+      - kafka
+    ports:
+      - "9000:9000"
+    networks:
+      - eyesec-net
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9092"
+      JVM_OPTS: "-Xms32M -Xmx64M"
+
 networks:
   eyesec-net:
     driver: bridge
