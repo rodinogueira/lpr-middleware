@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0.30-debian
+    container_name: eyesec-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: eyesec
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - eyesec-net
+
+  redis:
+    image: redis:7
+    container_name: eyesec-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - eyesec-net
+
+networks:
+  eyesec-net:
+    driver: bridge
