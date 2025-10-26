@@ -22,6 +22,12 @@ export class ConversionProcessor {
         const response = await axios.post(process.env.HIKIVISION_API, { vsm: vsmImage });
         const base64Image = response.data.base64;
 
+        // Atualiza a fila com a imagem convertida
+        await job.update({
+            ...job.data,
+            imageBase64: base64Image
+        });
+
         await this.kafkaService.sendLog('lpr-logs', { step: 'converted', plate, timestamp });
 
         // Consulta Celepar
